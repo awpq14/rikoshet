@@ -42,16 +42,15 @@ class Ball(GameSprite):
                 elif abs(self.rect.top - platform.rect.bottom) <= self.speed:
                     self.rect.top = platform.rect.bottom
                     self.y_speed *= -1
-wall_1 = GameSprite('stina.png', 190, 5, 40, 400)
-wall_2 = GameSprite('stina.png', 330, 90, 40, 400)
-wall_3 = GameSprite('stina.png', 440, 80, 220, 40)
-wall_4 = GameSprite('stina.png', 440, 120, 40, 290)
-wall_5 = GameSprite('stina.png', 0, 0, 10, 500)
+wall_1 = GameSprite('stina.png', 330, 90, 40, 400)
+
+wall_4 = GameSprite('stina.png', 0, 0, 10, 500)
+wall_5 = GameSprite('stina.png', 0, 0, 700, 10)
 wall_6 = GameSprite('stina.png', 0, 0, 700, 10)
 wall_7 = GameSprite('stina.png', 650, 0, 50, 500)
 wall_8 = GameSprite('stina.png', 0, 490, 700, 10)
 
-platforms = sprite.Group(wall_1, wall_2, wall_3, wall_4, wall_5, wall_6, wall_7, wall_8)
+platforms = sprite.Group(wall_1,  wall_4, wall_5, wall_6, wall_7, wall_8)
 hero=Player("ryka-removebg-preview.png", 200 ,300, 50 ,50)
 
 ball = sprite.GroupSingle()
@@ -76,4 +75,4 @@ while run:
     ball.update()
     ball.draw(window)
     display.update()
-
+    
