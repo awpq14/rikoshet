@@ -33,18 +33,23 @@ max_shots = 5
 shots_fired = 0
 
 # Вороги
-enemy_radius = 20
-enemies = [(440, 540)]
+enemy_radius = 50
+enemies = [(440, 430)]
 
 # Перешкоди (список прямокутників: (x, y, ширина, висота))
 obstacles = [(341, 179, 20, 420)]
 
 # Функція для малювання гравця
 def draw_player(pos, angle):
-    pygame.draw.circle(screen, player_color, pos, player_radius)
+
+    screen.blit(pygame.transform.scale(pygame.image.load("Без_імені-removebg-preview.png"),(50,100)),pos)
     gun_length = 40
-    end_pos = (pos[0] + gun_length * math.cos(angle), pos[1] - gun_length * math.sin(angle))
-    pygame.draw.line(screen, BLACK, pos, end_pos, 5)
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    rel_x, rel_y = mouse_x - pos[0], mouse_y - pos[1]
+    angle = (180 / math.pi) * -math.atan2(rel_y, rel_x)
+    
+    
+    screen.blit(pygame.transform.rotate(pygame.transform.scale(pygame.image.load("ryka-removebg-preview.png"),(50,20)),int(angle)),(70,480))
 
 # Функція для малювання патронів
 def draw_bullet(pos):
@@ -52,11 +57,11 @@ def draw_bullet(pos):
 
 # Функція для малювання ворогів
 def draw_enemy(pos):
-    screen.blit(pygame.transform.scale(pygame.image.load("ryka-removebg-preview.png"),(40,40)),pos)
+    screen.blit(pygame.transform.scale(pygame.image.load("depositphotos_654170370-stock-illustration-western-cowboy-bandit-gangster-standing-removebg-preview.png"),(200,200)),pos)
 
 # Функція для малювання перешкод
 def draw_obstacle(rect):
-    pygame.draw.rect(screen, GRAY, rect)
+    screen.blit(pygame.transform.scale(pygame.image.load("stina.png"),(40,430)),rect)
 
 # Перевірка на зіткнення кулі зі стінами (краї вікна)
 def bullet_collision_with_walls(bullet):
@@ -96,9 +101,12 @@ def bullet_collision_with_obstacles(bullet):
                     bullet["angle"] = -bullet["angle"]
 
 # Основний цикл гри
+finsh = "none"
+back=pygame.transform.scale(pygame.image.load("2304.w026.n002.3516B.p1.3516.jpg"),(800,600))
 running = True
 while running:
-    screen.fill(WHITE)
+    screen.blit(back,(0,0))
+
 
     # Отримання координат курсора миші
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -115,7 +123,9 @@ while running:
     for obstacle in obstacles:
         draw_obstacle(obstacle)
     if bullet_count==5:
-        running = False
+        finsh="loss"
+        running=False
+        
 
     # Відслідковуємо постріли
     for bullet in bullets:
@@ -133,6 +143,8 @@ while running:
             distance = math.hypot(ex - bx, ey - by)
             if distance < enemy_radius + bullet_radius:
                 enemies.remove(enemy)
+                finsh = "win"
+                running = False
                 if bullet in bullets:
                     bullets.remove(bullet)
 
@@ -161,5 +173,16 @@ while running:
 
     pygame.display.flip()
     pygame.time.Clock().tick(60)
+while finsh != "none":
+    screen.blit(back,(0,0))
+    if finsh=="win":
 
+        screen.blit(pygame.font.SysFont("Arial", 70).render("Ви виграли!", True, (255, 0, 0)), (200, 210))
+    else:
+        screen.blit(pygame.font.SysFont("Arial", 70).render("Ви програли((!", True, (255, 0, 0)), (200, 210))
+    pygame.display.flip()
+    pygame.time.Clock().tick(60)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            finsh = "none"
 pygame.quit()
